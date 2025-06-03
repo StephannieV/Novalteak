@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+
+# Intentar importar Plotly y dar mensaje si falta
+try:
+    import plotly.express as px
+except ModuleNotFoundError:
+    st.error("El módulo 'plotly' no está instalado. Por favor, ejecuta 'pip install plotly' en tu entorno o inclúyelo en requirements.txt si usas Streamlit Cloud.")
+    st.stop()
 
 # Cargar datos desde archivos CSV locales o desde variables (ejemplo con CSV)
 df_ecommerce = pd.read_csv("ecommerce_muebles.csv")
