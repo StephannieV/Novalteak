@@ -32,6 +32,16 @@ st.markdown("Una mirada analítica al comportamiento del mercado, importaciones,
 # Cargar los datos
 bd = cargar_datos()
 
+# Función para exportar a Excel
+@st.cache_data
+def convertir_excel(df):
+    from io import BytesIO
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Datos')
+    output.seek(0)
+    return output
+
 # Diseño profesional: columnas y tabs
 with st.container():
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -43,33 +53,50 @@ with st.container():
 
     with tab1:
         st.subheader("📦 Proporción de Ventas Online vs Tienda")
-        st.dataframe(bd["Ecommerce"], use_container_width=True)
+        df = bd["Ecommerce"]
+        st.dataframe(df, use_container_width=True)
+        if st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="ecommerce_ventas.xlsx"):
+            st.success("Archivo exportado correctamente")
 
     with tab2:
         col1, col2 = st.columns(2)
         with col1:
             st.subheader("📉 Importaciones y Producción de Madera")
-            st.dataframe(bd["Importaciones"], use_container_width=True)
+            df = bd["Importaciones"]
+            st.dataframe(df, use_container_width=True)
+            st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="importaciones_madera.xlsx")
         with col2:
             st.subheader("📈 Ventas Madera Tropical y Muebles de Lujo")
-            st.dataframe(bd["Ventas Tropical"], use_container_width=True)
+            df = bd["Ventas Tropical"]
+            st.dataframe(df, use_container_width=True)
+            st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="ventas_madera_tropical.xlsx")
 
     with tab3:
         st.subheader("💰 Inversión en Construcción Verde y Crecimiento del Sector")
-        st.dataframe(bd["Inclusion Verde"], use_container_width=True)
+        df = bd["Inclusion Verde"]
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="inclusion_sector_verde.xlsx")
 
     with tab4:
         st.subheader("💼 Valor del Mercado de Muebles")
-        st.dataframe(bd["Valor Muebles"], use_container_width=True)
+        df = bd["Valor Muebles"]
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="valor_mercado_muebles.xlsx")
 
         st.subheader("✨ Crecimiento de Muebles de Lujo y Exteriores")
-        st.dataframe(bd["Lujo y Exteriores"], use_container_width=True)
+        df = bd["Lujo y Exteriores"]
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="lujo_exteriores.xlsx")
 
         st.subheader("📊 Penetración del Mercado por Sector")
-        st.dataframe(bd["Penetración"], use_container_width=True)
+        df = bd["Penetración"]
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="penetracion_sector.xlsx")
 
         st.subheader("📈 Proyecciones de Ventas por Segmento")
-        st.dataframe(bd["Proyecciones Ventas"], use_container_width=True)
+        df = bd["Proyecciones Ventas"]
+        st.dataframe(df, use_container_width=True)
+        st.download_button("📥 Descargar Excel", convertir_excel(df), file_name="proyeccion_ventas.xlsx")
 
 # Footer profesional
 st.markdown("""
