@@ -1,52 +1,79 @@
 import streamlit as st
 import pandas as pd
 
-# Cargar datos desde archivos CSV locales o desde variables
+# Cargar archivos CSV
+@st.cache_data
+def cargar_datos():
+    return {
+        "Ecommerce": pd.read_csv("ecommerce_muebles.csv"),
+        "Importaciones": pd.read_csv("importaciones_madera.csv"),
+        "Inclusion Verde": pd.read_csv("inclusion_sector_verde.csv"),
+        "Valor Muebles": pd.read_csv("industria_muebles_valor.csv"),
+        "Lujo y Exteriores": pd.read_csv("muebles_lujo_exteriores.csv"),
+        "Penetración": pd.read_csv("penetracion_aplicacion_final.csv"),
+        "Proyecciones Ventas": pd.read_csv("proyeccion_ventas_cliente.csv"),
+        "Ventas Tropical": pd.read_csv("ventas_madera_tropical.csv")
+    }
 
-# Cargar los archivos CSV
-df_ecommerce = pd.read_csv("ecommerce_muebles.csv")
-df_importaciones = pd.read_csv("importaciones_madera.csv")
-df_inclusion = pd.read_csv("inclusion_sector_verde.csv")
-df_valor_muebles = pd.read_csv("industria_muebles_valor.csv")
-df_muebles_lujo_exteriores = pd.read_csv("muebles_lujo_exteriores.csv")
-df_penetracion = pd.read_csv("penetracion_aplicacion_final.csv")
-df_proyeccion_ventas = pd.read_csv("proyeccion_ventas_cliente.csv")
-df_ventas_madera_tropical = pd.read_csv("ventas_madera_tropical.csv")
+# Configuración de página
+st.set_page_config(page_title="Dashboard Sector Mueblero", layout="wide")
+st.markdown("""
+    <style>
+    .main {background-color: #f7f7f7;}
+    h1 {color: #1f4e79; font-size: 38px; font-weight: 700;}
+    h3 {color: #3e3e3e; margin-top: 20px;}
+    .block-container {padding-top: 2rem; padding-bottom: 2rem;}
+    </style>
+""", unsafe_allow_html=True)
 
-st.set_page_config(layout="wide")
-st.title("Dashboard Interactivo del Sector Mueblero y Construcción Sostenible en Canadá")
+st.title("📊 Dashboard del Sector Mueblero y Construcción Sostenible en Canadá")
+st.markdown("Una mirada analítica al comportamiento del mercado, importaciones, inversión y crecimiento.")
 
-# Sección: Ventas online vs tienda
-st.subheader("Proporción de Ventas Online vs Tienda")
-st.dataframe(df_ecommerce)
+# Cargar los datos
+bd = cargar_datos()
 
-# Sección: Producción y exportaciones de madera
-st.subheader("Importaciones y Producción de Madera")
-st.dataframe(df_importaciones)
+# Diseño profesional: columnas y tabs
+with st.container():
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "🏬 Canales de Venta",
+        "🌲 Madera e Importaciones",
+        "🏗️ Inversión y Crecimiento",
+        "🛋️ Mercado y Segmentación"
+    ])
 
-# Sección: Inversión gubernamental en construcción verde
-st.subheader("Inversión en Construcción Verde y Crecimiento del Sector")
-st.dataframe(df_inclusion)
+    with tab1:
+        st.subheader("📦 Proporción de Ventas Online vs Tienda")
+        st.dataframe(bd["Ecommerce"], use_container_width=True)
 
-# Sección: Valoración de mercado de muebles
-st.subheader("Valor del Mercado de Muebles en Canadá")
-st.dataframe(df_valor_muebles)
+    with tab2:
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("📉 Importaciones y Producción de Madera")
+            st.dataframe(bd["Importaciones"], use_container_width=True)
+        with col2:
+            st.subheader("📈 Ventas Madera Tropical y Muebles de Lujo")
+            st.dataframe(bd["Ventas Tropical"], use_container_width=True)
 
-# Sección: Crecimiento de muebles de lujo y exteriores
-st.subheader("Crecimiento Muebles Lujo y Exteriores")
-st.dataframe(df_muebles_lujo_exteriores)
+    with tab3:
+        st.subheader("💰 Inversión en Construcción Verde y Crecimiento del Sector")
+        st.dataframe(bd["Inclusion Verde"], use_container_width=True)
 
-# Sección: Penetración por sector
-st.subheader("Penetración del Mercado por Sector")
-st.dataframe(df_penetracion)
+    with tab4:
+        st.subheader("💼 Valor del Mercado de Muebles")
+        st.dataframe(bd["Valor Muebles"], use_container_width=True)
 
-# Sección: Proyecciones de ventas por segmento
-st.subheader("Proyecciones de Ventas por Segmento")
-st.dataframe(df_proyeccion_ventas)
+        st.subheader("✨ Crecimiento de Muebles de Lujo y Exteriores")
+        st.dataframe(bd["Lujo y Exteriores"], use_container_width=True)
 
-# Sección: Ventas de madera tropical y lujo
-st.subheader("Mercado de Madera Tropical y Muebles de Lujo")
-st.dataframe(df_ventas_madera_tropical)
+        st.subheader("📊 Penetración del Mercado por Sector")
+        st.dataframe(bd["Penetración"], use_container_width=True)
 
-st.markdown("---")
-st.caption("Datos basados en proyecciones e informes de 2024-2025. Fuente: Statista, Grand View Research, Expert Market Research, entre otros.")
+        st.subheader("📈 Proyecciones de Ventas por Segmento")
+        st.dataframe(bd["Proyecciones Ventas"], use_container_width=True)
+
+# Footer profesional
+st.markdown("""
+---
+**Fuentes:** Statista, Grand View Research, Expert Market Research, Made in CA, Pro Market Reports  
+Desarrollado para análisis de mercado y toma de decisiones estratégicas.
+""")
