@@ -104,3 +104,4 @@ st.markdown("""
 **Fuentes:** Statista, Grand View Research, Expert Market Research, Made in CA, Pro Market Reports  
 Desarrollado para análisis de mercado y toma de decisiones estratégicas.
 """)
+
